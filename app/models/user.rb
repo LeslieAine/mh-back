@@ -20,4 +20,10 @@ class User < ApplicationRecord
      # Define followers and following associations for both clients and creators
   has_many :followers, class_name: 'User', foreign_key: 'follower_id'
   has_many :following, class_name: 'User', foreign_key: 'following_id'
+
+  has_many :likes, foreign_key: :user_id # To track likes on posts
+  has_many :bookmarks, foreign_key: :user_id # To track bookmarks on creator's posts
+
+   # Define messages association
+   has_many :messages, foreign_key: :sender_id, class_name: 'Message'
 end
