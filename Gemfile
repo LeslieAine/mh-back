@@ -46,3 +46,8 @@ group :development do
   # gem "spring"
 end
 
+# Add Devise to your Gemfile
+gem 'devise'
+
+gem 'devise_token_auth'
+
