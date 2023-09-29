@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_29_131024) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_29_140308) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,28 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_29_131024) do
     t.integer "role", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "client_id"
+  end
+
+  create_table "creators", force: :cascade do |t|
+    t.string "username"
+    t.float "balance"
+    t.string "portfolio"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "creator_id"
+  end
+
+  create_table "transactions", force: :cascade do |t|
+    t.bigint "client_id", null: false
+    t.bigint "creator_id", null: false
+    t.float "amount"
+    t.string "transaction_type"
+    t.datetime "timestamp"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_transactions_on_client_id"
+    t.index ["creator_id"], name: "index_transactions_on_creator_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -31,8 +53,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_29_131024) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "role"
+    t.integer "follower_id"
+    t.integer "following_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "transactions", "clients"
+  add_foreign_key "transactions", "creators"
 end
