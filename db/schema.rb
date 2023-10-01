@@ -10,9 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_29_140308) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_01_150705) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "bookmarks", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "post_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_bookmarks_on_post_id"
+    t.index ["user_id"], name: "index_bookmarks_on_user_id"
+  end
 
   create_table "clients", force: :cascade do |t|
     t.float "balance"
@@ -23,6 +32,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_29_140308) do
     t.integer "client_id"
   end
 
+  create_table "contents", force: :cascade do |t|
+    t.bigint "creator_id", null: false
+    t.string "title"
+    t.text "description"
+    t.decimal "price"
+    t.string "url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["creator_id"], name: "index_contents_on_creator_id"
+  end
+
   create_table "creators", force: :cascade do |t|
     t.string "username"
     t.float "balance"
@@ -30,6 +50,44 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_29_140308) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "creator_id"
+  end
+
+  create_table "favorites", force: :cascade do |t|
+    t.bigint "client_id", null: false
+    t.bigint "creator_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_favorites_on_client_id"
+    t.index ["creator_id"], name: "index_favorites_on_creator_id"
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "post_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_likes_on_post_id"
+    t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.bigint "sender_id", null: false
+    t.bigint "receiver_id", null: false
+    t.text "content"
+    t.datetime "timestamp"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["receiver_id"], name: "index_messages_on_receiver_id"
+    t.index ["sender_id"], name: "index_messages_on_sender_id"
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.bigint "creator_id", null: false
+    t.text "content"
+    t.datetime "timestamp"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["creator_id"], name: "index_posts_on_creator_id"
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -59,6 +117,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_29_140308) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "bookmarks", "posts"
+  add_foreign_key "bookmarks", "users"
+  add_foreign_key "contents", "creators"
+  add_foreign_key "favorites", "clients"
+  add_foreign_key "favorites", "creators"
+  add_foreign_key "likes", "posts"
+  add_foreign_key "likes", "users"
+  add_foreign_key "messages", "users", column: "receiver_id"
+  add_foreign_key "messages", "users", column: "sender_id"
+  add_foreign_key "posts", "creators"
   add_foreign_key "transactions", "clients"
   add_foreign_key "transactions", "creators"
 end
