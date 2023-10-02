@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_01_150705) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_02_112156) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -81,6 +81,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_01_150705) do
     t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
+  create_table "orders", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.integer "length"
+    t.decimal "price", precision: 10, scale: 2
+    t.integer "status", default: 0
+    t.bigint "client_id"
+    t.bigint "creator_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_orders_on_client_id"
+    t.index ["creator_id"], name: "index_orders_on_creator_id"
+  end
+
   create_table "posts", force: :cascade do |t|
     t.bigint "creator_id", null: false
     t.text "content"
@@ -126,6 +140,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_01_150705) do
   add_foreign_key "likes", "users"
   add_foreign_key "messages", "users", column: "receiver_id"
   add_foreign_key "messages", "users", column: "sender_id"
+  add_foreign_key "orders", "users", column: "client_id"
+  add_foreign_key "orders", "users", column: "creator_id"
   add_foreign_key "posts", "creators"
   add_foreign_key "transactions", "clients"
   add_foreign_key "transactions", "creators"
