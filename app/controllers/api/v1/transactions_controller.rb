@@ -1,6 +1,6 @@
 # app/controllers/transactions_controller.rb
 
-class TransactionsController < ApplicationController
+class Api::V1::TransactionsController < ApplicationController
     before_action :authenticate_user
   
     # Handle the purchase logic

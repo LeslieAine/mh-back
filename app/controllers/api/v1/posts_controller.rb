@@ -1,6 +1,6 @@
 # app/controllers/posts_controller.rb
 
-class PostsController < ApplicationController
+class Api::V1::PostsController < ApplicationController
     before_action :authenticate_user, only: [:create]
   
     # Retrieve a list of all posts

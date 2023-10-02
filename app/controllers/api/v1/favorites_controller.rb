@@ -1,6 +1,6 @@
 # app/controllers/favorites_controller.rb
 
-class FavoritesController < ApplicationController
+class Api::V1::FavoritesController < ApplicationController
     before_action :authenticate_user, only: [:index, :create, :destroy]
   
     # List favorite creators for a client

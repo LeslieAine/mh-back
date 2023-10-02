@@ -1,6 +1,6 @@
 # app/controllers/likes_controller.rb
 
-class LikesController < ApplicationController
+class Api::V1::LikesController < ApplicationController
     before_action :authenticate_user
     before_action :find_post, only: [:create, :destroy]
   

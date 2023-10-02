@@ -1,6 +1,6 @@
 # app/controllers/messages_controller.rb
 
-class MessagesController < ApplicationController
+class Api::V1::MessagesController < ApplicationController
     before_action :authenticate_user
     before_action :find_receiver, only: [:create]
   

@@ -1,6 +1,6 @@
 # app/controllers/contents_controller.rb
 
-class ContentsController < ApplicationController
+class Api::V1::ContentsController < ApplicationController
     before_action :authenticate_user, except: [:index, :show]
     before_action :find_content, only: [:show]
   

@@ -1,6 +1,6 @@
 # app/controllers/bookmarks_controller.rb
 
-class BookmarksController < ApplicationController
+class Api::V1::BookmarksController < ApplicationController
     before_action :authenticate_user
     before_action :find_post, only: [:create, :destroy]
   

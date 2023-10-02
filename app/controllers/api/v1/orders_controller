@@ -1,6 +1,6 @@
 # app/controllers/orders_controller.rb
 
-class OrdersController < ApplicationController
+class Api::V1::OrdersController < ApplicationController
   before_action :authenticate_user
   before_action :find_creator, only: [:create]
   before_action :find_order, only: [:accept, :reject]
