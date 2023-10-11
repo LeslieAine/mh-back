@@ -3,11 +3,17 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
-  devise_for :users, controllers: {
+  devise_for :users , controllers: {
     sessions: 'users/sessions', registrations: 'users/registrations'
   }
   namespace :api do
     namespace :v1 do
+      resources :users, only: [:index, :show, :create, :update, :destroy] do
+        member do
+          post 'update_avatar'
+        end
+      end
+
       # Transactions controller routes
       resources :transactions, only: [:create]
 
@@ -15,7 +21,7 @@ Rails.application.routes.draw do
       resources :contents, only: [:index, :show]
 
       # Posts controller routes
-      resources :posts, only: [:create, :index, :show]
+      resources :posts, only: [:create, :index, :show, :destroy]
 
       # Likes controller routes
       resources :likes, only: [:create, :destroy]
