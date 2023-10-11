@@ -1,7 +1,7 @@
 # app/controllers/messages_controller.rb
 
 class Api::V1::MessagesController < ApplicationController
-    before_action :authenticate_user
+    # before_action :authenticate_user
     before_action :find_receiver, only: [:create]
   
     # Create a new message
@@ -42,9 +42,9 @@ class Api::V1::MessagesController < ApplicationController
   
     # Authentication logic (you can use a gem like Devise)
     def authenticate_user
-      unless current_user
-        render json: { error: 'Please log in to send messages' }, status: :unauthorized
-      end
-    end
+    #   unless current_user
+    #     render json: { error: 'Please log in to send messages' }, status: :unauthorized
+    #   end
+    # end
   end
   

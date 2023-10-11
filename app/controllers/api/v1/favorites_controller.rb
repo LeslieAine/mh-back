@@ -1,7 +1,7 @@
 # app/controllers/favorites_controller.rb
 
 class Api::V1::FavoritesController < ApplicationController
-    before_action :authenticate_user, only: [:index, :create, :destroy]
+    # before_action :authenticate_user, only: [:index, :create, :destroy]
   
     # List favorite creators for a client
     def index
@@ -36,10 +36,10 @@ class Api::V1::FavoritesController < ApplicationController
     private
   
     # Authentication logic (you can use a gem like Devise)
-    def authenticate_user
-      unless current_user
-        render json: { error: 'Please log in to access this page' }, status: :unauthorized
-      end
-    end
+    # def authenticate_user
+    #   unless current_user
+    #     render json: { error: 'Please log in to access this page' }, status: :unauthorized
+    #   end
+    # end
   end
   

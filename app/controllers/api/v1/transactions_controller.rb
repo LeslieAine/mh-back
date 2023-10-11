@@ -1,7 +1,7 @@
 # app/controllers/transactions_controller.rb
 
 class Api::V1::TransactionsController < ApplicationController
-    before_action :authenticate_user
+    # before_action :authenticate_user
   
     # Handle the purchase logic
     def purchase
@@ -34,11 +34,11 @@ class Api::V1::TransactionsController < ApplicationController
     private
   
     # Authentication logic (you can use a gem like Devise)
-    def authenticate_user
-      unless current_user
-        flash[:alert] = 'Please log in to make a purchase'
-        redirect_to login_path
-      end
-    end
+#     def authenticate_user
+#       unless current_user
+#         flash[:alert] = 'Please log in to make a purchase'
+#         redirect_to login_path
+#       end
+#     end
   end
   

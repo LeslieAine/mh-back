@@ -1,7 +1,7 @@
 # app/controllers/orders_controller.rb
 
 class Api::V1::OrdersController < ApplicationController
-  before_action :authenticate_user
+#   before_action :authenticate_user
   before_action :find_creator, only: [:create]
   before_action :find_order, only: [:accept, :reject]
 
@@ -74,9 +74,9 @@ class Api::V1::OrdersController < ApplicationController
   end
 
   # Authentication logic (you can use a gem like Devise)
-  def authenticate_user
-    unless current_user
-      render json: { error: 'Please log in to perform this action' }, status: :unauthorized
-    end
-  end
+#   def authenticate_user
+#     unless current_user
+#       render json: { error: 'Please log in to perform this action' }, status: :unauthorized
+#     end
+#   end
 end

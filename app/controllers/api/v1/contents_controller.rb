@@ -1,7 +1,7 @@
 # app/controllers/contents_controller.rb
 
 class Api::V1::ContentsController < ApplicationController
-    before_action :authenticate_user, except: [:index, :show]
+    # before_action :authenticate_user, except: [:index, :show]
     before_action :find_content, only: [:show]
   
     # Display a list of all available content
@@ -54,11 +54,11 @@ class Api::V1::ContentsController < ApplicationController
     end
   
     # Authentication logic (you can use a gem like Devise)
-    def authenticate_user
-      unless current_user
-        flash[:alert] = 'Please log in to access this page'
-        redirect_to login_path
-      end
-    end
+    # def authenticate_user
+    #   unless current_user
+    #     flash[:alert] = 'Please log in to access this page'
+    #     redirect_to login_path
+    #   end
+    # end
   end
   

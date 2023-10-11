@@ -1,7 +1,7 @@
 # app/controllers/likes_controller.rb
 
 class Api::V1::LikesController < ApplicationController
-    before_action :authenticate_user
+    # before_action :authenticate_user
     before_action :find_post, only: [:create, :destroy]
   
     # Like a post
@@ -48,10 +48,10 @@ class Api::V1::LikesController < ApplicationController
     end
   
     # Authentication logic (you can use a gem like Devise)
-    def authenticate_user
-      unless current_user
-        render json: { error: 'Please log in to perform this action' }, status: :unauthorized
-      end
-    end
+    # def authenticate_user
+    #   unless current_user
+    #     render json: { error: 'Please log in to perform this action' }, status: :unauthorized
+    #   end
+    # end
   end
   
