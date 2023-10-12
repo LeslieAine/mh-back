@@ -1,11 +1,12 @@
 class User < ApplicationRecord
+  include Devise::JWT::RevocationStrategies::JTIMatcher
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable, :jwt_authenticatable, jwt_revocation_strategy: self
 
    # Include Devise Token Auth for token generation
-   include DeviseTokenAuth::Concerns::User
+  #  include DeviseTokenAuth::Concerns::User
 
    # Attributes
   #  attr_accessor :role
@@ -13,7 +14,7 @@ class User < ApplicationRecord
   #   attr_accessor :username
   
   # Callback to set provider to 'email' if it's blank
-  before_save -> { self.provider = 'email' if provider.blank? }
+  # before_save -> { self.provider = 'email' if provider.blank? }
 
    # Validation
    validates :username, presence: true
@@ -33,4 +34,5 @@ class User < ApplicationRecord
 
    # Define messages association
    has_many :messages, foreign_key: :sender_id, class_name: 'Message'
+
 end
