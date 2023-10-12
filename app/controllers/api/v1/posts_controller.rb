@@ -45,8 +45,8 @@
         # Create a new post (for creators)
         def create
             # puts "Received params: #{params.inspect}"
-            @user = User.find_by(id: params[:user_id])
-            # @user = current_user
+            # @user = User.find_by(id: params[:user_id])
+            @user = current_user
 
         if @user.nil?
             render json: { error: 'User not found' }, status: :unprocessable_entity
