@@ -49,5 +49,7 @@ end
 # Add Devise to your Gemfile
 gem 'devise'
 
-gem 'devise_token_auth'
+# gem 'devise_token_auth'
+gem 'devise-jwt'
+gem 'jsonapi-serializer'
 
