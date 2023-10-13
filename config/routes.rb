@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  devise_for :clients
+  devise_for :creators, controllers: {
+    sessions: 'creators/sessions', registrations: 'creators/registrations'
+  }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
