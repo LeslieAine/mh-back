@@ -320,6 +320,13 @@ Devise.setup do |config|
     jwt.revocation_requests = [
       ['DELETE', %r{^/users/sign_out$}]
     ]
+    # Dispatch and revocation requests for the Creator model
+    jwt.dispatch_requests += [
+      ['POST', %r{^/creators/sign_in$}]
+    ]
+    jwt.revocation_requests += [
+      ['DELETE', %r{^/creators/sign_out$}]
+    ]
     jwt.expiration_time = 120.minutes.to_i
 end
 end
