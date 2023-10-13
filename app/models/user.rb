@@ -35,4 +35,5 @@ class User < ApplicationRecord
    # Define messages association
    has_many :messages, foreign_key: :sender_id, class_name: 'Message'
 
+
 end
