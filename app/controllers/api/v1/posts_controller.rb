@@ -28,15 +28,15 @@
         #   end
         
         def index
-            @posts = Post.includes(:user).order(created_at: :desc)
-            render json: @posts.to_json(include: { user: { only: [:id, :username, :avatar] } })
+            @posts = Post.includes(:creator).order(created_at: :desc)
+            render json: @posts.to_json(include: { creator: { only: [:id, :username, :avatar] } })
           end
     
           def show
-            @post = Post.includes(:user).find_by(id: params[:id])
+            @post = Post.includes(:creator).find_by(id: params[:id])
     
             if @post
-              render json: @post.to_json(include: { user: { only: [:id, :username, :avatar] } })
+              render json: @post.to_json(include: { creator: { only: [:id, :username, :avatar] } })
             else
               render json: { error: 'Post not found' }, status: :not_found
             end
@@ -46,14 +46,14 @@
         def create
             # puts "Received params: #{params.inspect}"
             # @user = User.find_by(id: params[:user_id])
-            @user = current_user
+            @creator = current_creator
 
-        if @user.nil?
+        if @creator.nil?
             render json: { error: 'User not found' }, status: :unprocessable_entity
         else
 
 
-        @post = @user.posts.build(post_params)
+        @post = @creator.posts.build(post_params)
         if @post.save
             render json: @post, status: :created
         else
@@ -107,7 +107,7 @@
 
         # DELETE /api/v1/posts/:id
     def destroy
-        if current_user.creator? && @post.user == current_user
+        if current_creator? && @post.creator == current_creator
         @post.destroy
         render json: { message: 'Post deleted successfully' }
         else
@@ -135,7 +135,7 @@
     end
     
         def post_params
-        params.require(:post).permit(:content, :user_id)
+        params.require(:post).permit(:content, :creator_id)
         end
     
         # Authentication logic (you can use a gem like Devise)

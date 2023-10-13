@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_13_130456) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_13_133557) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -131,12 +131,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_13_130456) do
   end
 
   create_table "posts", force: :cascade do |t|
-    t.bigint "user_id", null: false
     t.text "content"
     t.datetime "timestamp"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_posts_on_user_id"
+    t.bigint "creator_id", null: false
+    t.index ["creator_id"], name: "index_posts_on_creator_id"
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -180,6 +180,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_13_130456) do
   add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "orders", "users", column: "client_id"
   add_foreign_key "orders", "users", column: "creator_id"
-  add_foreign_key "posts", "users"
+  add_foreign_key "posts", "creators"
   add_foreign_key "transactions", "clients"
 end
