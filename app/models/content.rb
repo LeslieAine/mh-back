@@ -1,4 +1,5 @@
 class Content < ApplicationRecord
+  attr_accessor :isPaid
    # Associations
    belongs_to :creator, class_name: 'Creator', foreign_key: 'creator_id'
 

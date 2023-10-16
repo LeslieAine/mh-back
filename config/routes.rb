@@ -30,7 +30,7 @@ Rails.application.routes.draw do
       resources :transactions, only: [:create]
 
       # Contents controller routes
-      resources :contents, only: [:index, :show]
+      resources :contents, only: [:create, :index, :show, :destroy]
 
       # Posts controller routes
       resources :posts, only: [:create, :index, :show, :destroy]
