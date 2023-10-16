@@ -1,6 +1,6 @@
 class Order < ApplicationRecord
-    belongs_to :client, class_name: 'User'
-    belongs_to :creator, class_name: 'User'
+    belongs_to :client, class_name: 'Client'
+    belongs_to :creator, class_name: 'Creator'
   
     enum status: { pending: 0, accepted: 1, rejected: 2 }
   
