@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  devise_for :clients
+  devise_for :clients, controllers: {
+    sessions: 'clients/sessions', registrations: 'clients/registrations'
+  }
   devise_for :creators, controllers: {
     sessions: 'creators/sessions', registrations: 'creators/registrations'
   }
@@ -28,7 +30,7 @@ Rails.application.routes.draw do
       resources :transactions, only: [:create]
 
       # Contents controller routes
-      resources :contents, only: [:index, :show]
+      resources :contents, only: [:create, :index, :show, :destroy]
 
       # Posts controller routes
       resources :posts, only: [:create, :index, :show, :destroy]
