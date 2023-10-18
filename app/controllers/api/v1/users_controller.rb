@@ -27,6 +27,10 @@ class Api::V1::UsersController < ApplicationController
   # POST /users or /users.json
 def create
     @user = User.new(user_params)
+
+    if params[:role].present?
+        @user.assign_default_role(params[:role])
+      end
   
     if @user.save
       render json: @user, status: :created
@@ -122,6 +126,14 @@ def create
     def user_params
       params.require(:user).permit(:username, :email, :password, :role)
     end
+
+    # def add_roles(resource)
+    #     resource.roles = []
+    #     unless params[:user][:role_ids].blank?
+    #       params[:user][:role_ids].each do |role|
+    #         resource.add_role Role.find(role).name
+    #       end
+    # end
   
     # Authentication logic (you can use a gem like Devise)
 #     def authenticate_user
