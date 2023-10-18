@@ -1,50 +1,60 @@
 # app/controllers/messages_controller.rb
 
 class Api::V1::MessagesController < ApplicationController
-    # before_action :authenticate_user
-    before_action :find_receiver, only: [:create]
-  
-    # Create a new message
-    def create
-      if current_user.client?
-        @message = current_user.sent_messages.build(message_params)
-        @message.receiver = @receiver
-        if @message.save
-          render json: @message, status: :created
-        else
-          render json: { error: 'Failed to send the message' }, status: :unprocessable_entity
-        end
-      else
-        render json: { error: 'Only clients can send messages' }, status: :forbidden
+
+    def create_message
+        message = Message.new_message(params)
+        render json: message, status: :created
       end
-    end
+    
+      def message_history # get message history of a single matched user
+        messages = Message.messages(params)
+        render json: messages, status: :ok
+      end
+    # before_action :authenticate_user
+#     before_action :find_receiver, only: [:create]
   
-    # List messages between the current user and a specific receiver
-    def index
-      @receiver = User.find(params[:receiver_id])
-      @messages = Message.where('(sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)',
-                                 current_user.id, @receiver.id, @receiver.id, current_user.id)
-                         .order(:created_at)
-      render json: @messages
-    end
+#     # Create a new message
+#     def create
+#       if current_user.client?
+#         @message = current_user.sent_messages.build(message_params)
+#         @message.receiver = @receiver
+#         if @message.save
+#           render json: @message, status: :created
+#         else
+#           render json: { error: 'Failed to send the message' }, status: :unprocessable_entity
+#         end
+#       else
+#         render json: { error: 'Only clients can send messages' }, status: :forbidden
+#       end
+#     end
   
-    private
+#     # List messages between the current user and a specific receiver
+#     def index
+#       @receiver = User.find(params[:receiver_id])
+#       @messages = Message.where('(sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)',
+#                                  current_user.id, @receiver.id, @receiver.id, current_user.id)
+#                          .order(:created_at)
+#       render json: @messages
+#     end
   
-    # Message params
-    def message_params
-      params.require(:message).permit(:content)
-    end
+#     private
   
-    # Find the message receiver by ID
-    def find_receiver
-      @receiver = User.find(params[:receiver_id])
-    end
+#     # Message params
+#     def message_params
+#       params.require(:message).permit(:content)
+#     end
   
-    # Authentication logic (you can use a gem like Devise)
-    def authenticate_user
-    #   unless current_user
-    #     render json: { error: 'Please log in to send messages' }, status: :unauthorized
-    #   end
-    # end
+#     # Find the message receiver by ID
+#     def find_receiver
+#       @receiver = User.find(params[:receiver_id])
+#     end
+  
+#     # Authentication logic (you can use a gem like Devise)
+#     def authenticate_user
+#     #   unless current_user
+#     #     render json: { error: 'Please log in to send messages' }, status: :unauthorized
+#     #   end
+#     # end
   end
   
