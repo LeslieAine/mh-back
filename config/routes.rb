@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
-  devise_for :clients, controllers: {
-    sessions: 'clients/sessions', registrations: 'clients/registrations'
-  }
-  devise_for :creators, controllers: {
-    sessions: 'creators/sessions', registrations: 'creators/registrations'
-  }
+  mount ActionCable.server => "/cable"
+  # devise_for :clients, controllers: {
+  #   sessions: 'clients/sessions', registrations: 'clients/registrations'
+  # }
+  # devise_for :creators, controllers: {
+  #   sessions: 'creators/sessions', registrations: 'creators/registrations'
+  # }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
@@ -25,6 +26,9 @@ Rails.application.routes.draw do
       #     post 'update_avatar'
       #   end
       # end
+      resources :users
+      # resources :publishers
+      resources :roles
 
       # Transactions controller routes
       resources :transactions, only: [:create]
