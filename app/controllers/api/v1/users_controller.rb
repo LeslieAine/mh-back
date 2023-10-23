@@ -1,21 +1,24 @@
-class Api::V1::UsersController < ApplicationController
+class Api::V1::UsersController < ApiController
+    skip_before_action :authenticate_user!, only: [:create]
     # before_action :authenticate_user, only: [:profile, :deposit]
 
     # GET /users or /users.json
-  def index
-    @users = User.all
-  end
+    # def index
+    #     @user = User.find(params[:id])
+    #     @users = @user.get_users(params)
+    #     render json: @users, status: :ok
+    #   end
 
   # GET /api/v1/users
-#   def index
-#     @users = User.all
-#     render json: @users, status: :ok
-#   end
+  def index
+    @users = User.all
+    render json: @users, status: :ok
+  end
 
    # GET /api/v1/users/:id
    def show
-    # @user = User.find(params[:id])
-    # render json: @user, status: :ok
+    @user = User.find(params[:id])
+    render json: @user, status: :ok
   end
 
   # GET /users/new
@@ -33,9 +36,11 @@ def create
       end
   
     if @user.save
-      render json: @user, status: :created
+    #   render json: @user, status: :created
+     render json: { token: JsonWebToken.encode(sub: @user.id) }, status: 200
     else
-      render json: @user.errors, status: :unprocessable_entity
+    #   render json: @user.errors, status: :unprocessable_entity
+        render json: { message: @user.errors.full_messages }, status: 400
     end
   end
   
