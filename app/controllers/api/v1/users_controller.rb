@@ -1,5 +1,5 @@
-class Api::V1::UsersController < ApiController
-    skip_before_action :authenticate_user!, only: [:create]
+class Api::V1::UsersController < ApplicationController
+    # skip_before_action :authenticate_user!, only: [:create]
     # before_action :authenticate_user, only: [:profile, :deposit]
 
     # GET /users or /users.json
@@ -36,14 +36,29 @@ def create
       end
   
     if @user.save
-    #   render json: @user, status: :created
-     render json: { token: JsonWebToken.encode(sub: @user.id) }, status: 200
+      render json: @user, status: :created
+    #  render json: { token: JsonWebToken.encode(sub: @user.id) }, status: created
     else
-    #   render json: @user.errors, status: :unprocessable_entity
-        render json: { message: @user.errors.full_messages }, status: 400
+      render json: @user.errors, status: :unprocessable_entity
+        # render json: { message: @user.errors.full_messages }, status: 400
     end
   end
   
+#   def login
+#         email = params[:user][:email]
+#      password = params[:user][:password]
+#     # @user = User.find_by(email: params[:email])
+#     @user = User.find_by(email: email)
+
+#     if @user&.valid_password?(password)
+#       token = JsonWebToken.encode(sub: @user.id)
+#       render json: { token: token }, status: :ok
+#     else
+#       render json: { message: 'Login failed' }, status: :unauthorized
+#     end
+#   end
+
+
   
   # POST /users or /users.json
 #   def create
