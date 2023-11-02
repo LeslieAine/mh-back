@@ -29,12 +29,17 @@ class User < ApplicationRecord
   has_many :following, class_name: 'User', foreign_key: 'following_id'
   # has_one_attached :avatar
   has_many :posts, foreign_key: 'user_id'
+  has_many :contents
 
   has_many :likes, foreign_key: :user_id # To track likes on posts
   has_many :bookmarks, foreign_key: :user_id # To track bookmarks on creator's posts
 
    # Define messages association
-   has_many :messages, foreign_key: :sender_id, class_name: 'Message'
+  #  has_many :messages, foreign_key: :sender_id, class_name: 'Message'
+  has_many :messages
+  has_many :conversations
+  # has_many :conversations_as_user1, class_name: 'Conversation', foreign_key: 'user1_id'
+  # has_many :conversations_as_user2, class_name: 'Conversation', foreign_key: 'user2_id'
 
    after_create :assign_default_role
 
