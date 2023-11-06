@@ -3,6 +3,7 @@
     class Api::V1::PostsController < ApplicationController
         # before_action :authenticate_user, only: [:create]
         before_action :find_post, only: [:show, :destroy]
+        load_and_authorize_resource
     
         # Retrieve a list of all posts
         # def index
@@ -28,32 +29,32 @@
         #   end
         
         def index
-            @posts = Post.includes(:creator).order(created_at: :desc)
-            render json: @posts.to_json(include: { creator: { only: [:id, :username, :avatar] } })
+            @posts = Post.includes(:user).order(created_at: :desc)
+            render json: @posts.to_json(include: { user: { only: [:id, :username, :avatar] } })
           end
     
           def show
-            @post = Post.includes(:creator).find_by(id: params[:id])
+            @post = Post.includes(:user).find_by(id: params[:id])
     
             if @post
-              render json: @post.to_json(include: { creator: { only: [:id, :username, :avatar] } })
+              render json: @post.to_json(include: { user: { only: [:id, :username, :avatar] } })
             else
               render json: { error: 'Post not found' }, status: :not_found
             end
           end
 
-        # Create a new post (for creators)
+        # Create a new post (for users)
         def create
             # puts "Received params: #{params.inspect}"
             # @user = User.find_by(id: params[:user_id])
-            @creator = current_creator
+            @user = current_user
 
-        if @creator.nil?
+        if @user.nil?
             render json: { error: 'User not found' }, status: :unprocessable_entity
         else
 
 
-        @post = @creator.posts.build(post_params)
+        @post = @user.posts.build(post_params)
         if @post.save
             render json: @post, status: :created
         else
@@ -107,7 +108,7 @@
 
         # DELETE /api/v1/posts/:id
     def destroy
-        if current_creator? && @post.creator == current_creator
+        if current_user? && @post.user == current_user
         @post.destroy
         render json: { message: 'Post deleted successfully' }
         else
@@ -135,7 +136,7 @@
     end
     
         def post_params
-        params.require(:post).permit(:content, :creator_id)
+        params.require(:post).permit(:content, :user_id)
         end
     
         # Authentication logic (you can use a gem like Devise)

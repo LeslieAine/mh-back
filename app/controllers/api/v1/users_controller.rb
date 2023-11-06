@@ -1,21 +1,24 @@
 class Api::V1::UsersController < ApplicationController
+    # skip_before_action :authenticate_user!, only: [:create]
     # before_action :authenticate_user, only: [:profile, :deposit]
 
     # GET /users or /users.json
-  def index
-    @users = User.all
-  end
+    # def index
+    #     @user = User.find(params[:id])
+    #     @users = @user.get_users(params)
+    #     render json: @users, status: :ok
+    #   end
 
   # GET /api/v1/users
-#   def index
-#     @users = User.all
-#     render json: @users, status: :ok
-#   end
+  def index
+    @users = User.all
+    render json: @users, status: :ok
+  end
 
    # GET /api/v1/users/:id
    def show
-    # @user = User.find(params[:id])
-    # render json: @user, status: :ok
+    @user = User.find(params[:id])
+    render json: @user, status: :ok
   end
 
   # GET /users/new
@@ -27,14 +30,35 @@ class Api::V1::UsersController < ApplicationController
   # POST /users or /users.json
 def create
     @user = User.new(user_params)
+
+    if params[:role].present?
+        @user.assign_default_role(params[:role])
+      end
   
     if @user.save
       render json: @user, status: :created
+    #  render json: { token: JsonWebToken.encode(sub: @user.id) }, status: created
     else
       render json: @user.errors, status: :unprocessable_entity
+        # render json: { message: @user.errors.full_messages }, status: 400
     end
   end
   
+#   def login
+#         email = params[:user][:email]
+#      password = params[:user][:password]
+#     # @user = User.find_by(email: params[:email])
+#     @user = User.find_by(email: email)
+
+#     if @user&.valid_password?(password)
+#       token = JsonWebToken.encode(sub: @user.id)
+#       render json: { token: token }, status: :ok
+#     else
+#       render json: { message: 'Login failed' }, status: :unauthorized
+#     end
+#   end
+
+
   
   # POST /users or /users.json
 #   def create
@@ -122,6 +146,14 @@ def create
     def user_params
       params.require(:user).permit(:username, :email, :password, :role)
     end
+
+    # def add_roles(resource)
+    #     resource.roles = []
+    #     unless params[:user][:role_ids].blank?
+    #       params[:user][:role_ids].each do |role|
+    #         resource.add_role Role.find(role).name
+    #       end
+    # end
   
     # Authentication logic (you can use a gem like Devise)
 #     def authenticate_user

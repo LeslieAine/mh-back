@@ -8,6 +8,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
       render json: {
         status: { code: 200, message: 'Signed up successfully', data: resource }
       }, status: :ok
+    #  render json: { token: JsonWebToken.encode(sub: @user.id), data: resource }, status: created
+
     else
       render json: {
         status: { message: 'User could not be created', errors: resource.errors.full_messages }

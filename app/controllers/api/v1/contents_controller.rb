@@ -6,16 +6,16 @@ class Api::V1::ContentsController < ApplicationController
   
     # Display a list of all available content
     def index
-      @contents = Content.includes(:creator).order(created_at: :desc)
-      render json: @contents.to_json(include: { creator: { only: [:id, :username, :avatar] } })
+      @contents = Content.includes(:user).order(created_at: :desc)
+      render json: @contents.to_json(include: { user: { only: [:id, :username, :avatar] } })
     end
   
     # Show details of a specific content item
     def show
         # @content = Content.find(params[:id])
-        @content = Content.includes(:creator).find_by(id: params[:id])
+        @content = Content.includes(:user).find_by(id: params[:id])
         if @content
-            render json: @content.to_json(include: { creator: { only: [:id, :username, :avatar] } })
+            render json: @content.to_json(include: { user: { only: [:id, :username, :avatar] } })
           else
             render json: { error: 'Content not found' }, status: :not_found
           end
@@ -36,20 +36,20 @@ class Api::V1::ContentsController < ApplicationController
     #   end
     end
   
-    # Creator's action: Create new content
+    # user's action: Create new content
     def create
-        @creator = current_creator
+        @user = current_user
 
-        if @creator.nil?
+        if @user.nil?
             render json: { error: 'User not found' }, status: :unprocessable_entity
         else
 
 
-        @post = @creator.contents.build(content_params)
-        if @post.save
-            render json: @post, status: :created
+        @content = @user.contents.build(content_params)
+        if @content.save
+            render json: @content, status: :created
         else
-            render json: { errors: @post.errors.full_messages }, status: :unprocessable_entity
+            render json: { errors: @content.errors.full_messages }, status: :unprocessable_entity
         end
         end
     end
@@ -58,7 +58,7 @@ class Api::V1::ContentsController < ApplicationController
   
     # Strong parameters for content creation
     def content_params
-      params.require(:content).permit(:title, :description, :price, :url, :creator_id, :isPaid)
+      params.require(:content).permit(:title, :description, :price, :url, :user_id, :isPaid)
     end
   
     # Find content by ID for show action

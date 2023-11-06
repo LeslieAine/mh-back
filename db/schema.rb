@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_16_121731) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_22_210630) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,6 +51,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_16_121731) do
     t.index ["user_id"], name: "index_bookmarks_on_user_id"
   end
 
+  create_table "chatrooms", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "clients", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -69,7 +75,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_16_121731) do
   end
 
   create_table "contents", force: :cascade do |t|
-    t.bigint "creator_id", null: false
+    t.bigint "user_id", null: false
     t.string "title"
     t.text "description"
     t.decimal "price"
@@ -77,7 +83,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_16_121731) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "isPaid"
-    t.index ["creator_id"], name: "index_contents_on_creator_id"
+    t.index ["user_id"], name: "index_contents_on_user_id"
+  end
+
+  create_table "conversations", force: :cascade do |t|
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "title"
+    t.index ["user_id"], name: "index_conversations_on_user_id"
   end
 
   create_table "creators", force: :cascade do |t|
@@ -115,14 +129,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_16_121731) do
   end
 
   create_table "messages", force: :cascade do |t|
-    t.bigint "sender_id", null: false
-    t.bigint "receiver_id", null: false
-    t.text "content"
-    t.datetime "timestamp"
+    t.text "body"
+    t.bigint "conversation_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["receiver_id"], name: "index_messages_on_receiver_id"
-    t.index ["sender_id"], name: "index_messages_on_sender_id"
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -144,8 +157,25 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_16_121731) do
     t.datetime "timestamp"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "creator_id", null: false
-    t.index ["creator_id"], name: "index_posts_on_creator_id"
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_posts_on_user_id"
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.string "name"
+    t.string "resource_type"
+    t.bigint "resource_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
+    t.index ["resource_type", "resource_id"], name: "index_roles_on_resource"
+  end
+
+  create_table "rooms", force: :cascade do |t|
+    t.string "name"
+    t.boolean "is_private", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -168,25 +198,33 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_16_121731) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "role"
     t.integer "follower_id"
     t.integer "following_id"
     t.string "username"
     t.string "jti", null: false
+    t.string "role"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "users_roles", id: false, force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "role_id"
+    t.index ["role_id"], name: "index_users_roles_on_role_id"
+    t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
+    t.index ["user_id"], name: "index_users_roles_on_user_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "bookmarks", "posts"
   add_foreign_key "bookmarks", "users"
-  add_foreign_key "likes", "posts"
+  add_foreign_key "contents", "users"
+  add_foreign_key "conversations", "users"
   add_foreign_key "likes", "users"
-  add_foreign_key "messages", "users", column: "receiver_id"
-  add_foreign_key "messages", "users", column: "sender_id"
+  add_foreign_key "messages", "conversations"
+  add_foreign_key "messages", "users"
   add_foreign_key "orders", "users", column: "client_id"
   add_foreign_key "orders", "users", column: "creator_id"
-  add_foreign_key "posts", "creators"
+  add_foreign_key "posts", "users"
 end
