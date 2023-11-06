@@ -24,7 +24,7 @@ class Creator < ApplicationRecord
        has_many :followers, foreign_key: 'follower_id'
        has_many :following, foreign_key: 'following_id'
     #    has_one_attached :avatar
-       has_many :posts, foreign_key: 'creator_id'
+    #    has_many :posts, foreign_key: 'creator_id'
        has_many :orders
         has_many :contents # To track created content
         has_many :favorite_counts, class_name: 'User', foreign_key: 'favorite_creator_id' # To count favorited by users

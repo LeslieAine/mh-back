@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::API
+# class ApplicationController < ActionController::Base
+    # protect_from_forgery with: :exception
     before_action :configure_permitted_parameters, if: :devise_controller?
   protected
   def configure_permitted_parameters
@@ -8,5 +10,7 @@ class ApplicationController < ActionController::API
 end
 
 # class ApplicationController < ActionController::Base
-#     protect_from_forgery with: :null_session
+#     # protect_from_forgery with: :null_session
+#     # skip_before_action :verify_authenticity_token
+#     # protect_from_forgery with: :exception
 #   end
