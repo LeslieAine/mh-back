@@ -56,3 +56,8 @@ gem 'jsonapi-serializer'
 # for roles
 gem 'rolify'
 gem 'cancancan'
+
+#for ActiveRecord
+gem 'active_model_serializers'
+# gem 'jsonapi-serializer'
+
