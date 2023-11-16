@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_22_210630) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_06_100910) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -55,6 +55,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_22_210630) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "chats", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "room_id", null: false
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["room_id"], name: "index_chats_on_room_id"
+    t.index ["user_id"], name: "index_chats_on_user_id"
   end
 
   create_table "clients", force: :cascade do |t|
@@ -138,6 +148,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_22_210630) do
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.boolean "seen", default: false
+    t.string "content"
+    t.bigint "user_id", null: false
+    t.bigint "room_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["room_id"], name: "index_notifications_on_room_id"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
   create_table "orders", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -172,8 +193,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_22_210630) do
   end
 
   create_table "rooms", force: :cascade do |t|
-    t.string "name"
-    t.boolean "is_private", default: false
+    t.boolean "seen", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -219,11 +239,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_22_210630) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "bookmarks", "users"
+  add_foreign_key "chats", "rooms"
+  add_foreign_key "chats", "users"
   add_foreign_key "contents", "users"
   add_foreign_key "conversations", "users"
   add_foreign_key "likes", "users"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users"
+  add_foreign_key "notifications", "rooms"
+  add_foreign_key "notifications", "users"
   add_foreign_key "orders", "users", column: "client_id"
   add_foreign_key "orders", "users", column: "creator_id"
   add_foreign_key "posts", "users"
