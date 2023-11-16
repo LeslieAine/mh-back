@@ -34,10 +34,14 @@ class User < ApplicationRecord
   has_many :likes, foreign_key: :user_id # To track likes on posts
   has_many :bookmarks, foreign_key: :user_id # To track bookmarks on creator's posts
 
+  has_many :notifications
+  has_many :chats
+  has_many :rooms, through: :chats
+
    # Define messages association
   #  has_many :messages, foreign_key: :sender_id, class_name: 'Message'
-  has_many :messages
-  has_many :conversations
+  # has_many :messages
+  # has_many :conversations
   # has_many :conversations_as_user1, class_name: 'Conversation', foreign_key: 'user1_id'
   # has_many :conversations_as_user2, class_name: 'Conversation', foreign_key: 'user2_id'
 
