@@ -27,13 +27,16 @@ Rails.application.routes.draw do
       resources :contents, only: [:create, :index, :show, :destroy]
 
       # Posts controller routes
-      resources :posts, only: [:create, :index, :show, :destroy]
+      resources :posts, only: [:create, :index, :show, :destroy] do
+        resources :likes
+        resources :bookmarks
+      end
 
       # Likes controller routes
-      resources :likes, only: [:create, :destroy]
+      # resources :likes, only: [:create, :destroy]
 
       # Bookmarks controller routes
-      resources :bookmarks, only: [:create, :index, :destroy]
+      # resources :bookmarks, only: [:create, :index, :destroy]
 
       # Messages controller routes
       resources :messages, only: [:create, :index]
