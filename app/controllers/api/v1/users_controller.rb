@@ -1,4 +1,6 @@
 class Api::V1::UsersController < ApplicationController
+  # include Socialization::Follower
+  # include Socialization::Followable
     # skip_before_action :authenticate_user!, only: [:create]
     # before_action :authenticate_user, only: [:profile, :deposit]
 
@@ -44,60 +46,6 @@ def create
     end
   end
   
-#   def login
-#         email = params[:user][:email]
-#      password = params[:user][:password]
-#     # @user = User.find_by(email: params[:email])
-#     @user = User.find_by(email: email)
-
-#     if @user&.valid_password?(password)
-#       token = JsonWebToken.encode(sub: @user.id)
-#       render json: { token: token }, status: :ok
-#     else
-#       render json: { message: 'Login failed' }, status: :unauthorized
-#     end
-#   end
-
-
-  
-  # POST /users or /users.json
-#   def create
-#     @user = User.new(user_params)
-
-#     respond_to do |format|
-#       if @user.save
-#         format.html { redirect_to user_url(@user), notice: 'User was successfully created.' }
-#         format.json { render :show, status: :created, location: @user }
-#       else
-#         format.html { render :new, status: :unprocessable_entity }
-#         format.json { render json: @user.errors, status: :unprocessable_entity }
-#       end
-#     end
-#   end
-  
-    # User registration action
-    # def register
-    #   @user = User.new(user_params)
-    #   if @user.save
-    #     # User successfully registered, redirect to login page or perform other actions
-    #     redirect_to login_path, notice: 'Registration successful!'
-    #   else
-    #     render :register
-    #   end
-    # end
-  
-    # # User login action
-    # def login
-    #   @user = User.find_by(email: params[:email])
-    #   if @user && @user.authenticate(params[:password])
-    #     # User successfully logged in, set session or token and redirect to dashboard
-    #     session[:user_id] = @user.id
-    #     redirect_to dashboard_path, notice: 'Login successful!'
-    #   else
-    #     flash.now[:alert] = 'Invalid email or password'
-    #     render :login
-    #   end
-    # end
   
     # User profile management action
     def profile
@@ -139,6 +87,37 @@ def create
       render json: { error: 'Failed to upload avatar' }, status: :unprocessable_entity
     end
   end
+
+  def follow
+    user_to_follow = User.find(params[:user_id])
+    @following = current_user
+    if @following.follow!(user_to_follow)
+      render json: { message: 'You are now following this user.' }
+    else
+      render json: { error: 'Failed to follow this user.' }, status: :unprocessable_entity
+    end
+  end
+
+  def unfollow
+    user_to_unfollow = User.find(params[:user_id])
+    
+    @unfollowing = current_user
+    if @unfollowing.unfollow!(user_to_unfollow)
+      render json: { message: 'You have unfollowed this user.' }
+    else
+      render json: { error: 'Failed to unfollow this user.' }, status: :unprocessable_entity
+    end
+  end
+
+  def followers
+    @followers = current_user.followers(User)
+    render json: @followers, status: :ok
+  end
+
+  def followees
+    @followees = current_user.followees(User)
+    render json: @followees, status: :ok
+  end
   
     private
   
@@ -147,20 +126,5 @@ def create
       params.require(:user).permit(:username, :email, :password, :role)
     end
 
-    # def add_roles(resource)
-    #     resource.roles = []
-    #     unless params[:user][:role_ids].blank?
-    #       params[:user][:role_ids].each do |role|
-    #         resource.add_role Role.find(role).name
-    #       end
-    # end
-  
-    # Authentication logic (you can use a gem like Devise)
-#     def authenticate_user
-#       unless current_user
-#         flash[:alert] = 'Please log in to access this page'
-#         redirect_to login_path
-#       end
-#     end
   end
   

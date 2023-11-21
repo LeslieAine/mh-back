@@ -25,8 +25,8 @@ class User < ApplicationRecord
   #  enum role: { client: 0, creator: 1 }
 
      # Define followers and following associations for both clients and creators
-  has_many :followers, class_name: 'User', foreign_key: 'follower_id'
-  has_many :following, class_name: 'User', foreign_key: 'following_id'
+  # has_many :followers, class_name: 'User', foreign_key: 'follower_id'
+  # has_many :following, class_name: 'User', foreign_key: 'following_id'
   # has_one_attached :avatar
   has_many :posts, foreign_key: 'user_id'
   has_many :contents
@@ -37,6 +37,9 @@ class User < ApplicationRecord
   has_many :notifications
   has_many :chats
   has_many :rooms, through: :chats
+
+  acts_as_follower
+  acts_as_followable
 
    # Define messages association
   #  has_many :messages, foreign_key: :sender_id, class_name: 'Message'
