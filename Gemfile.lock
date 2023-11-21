@@ -190,6 +190,8 @@ GEM
       actionpack (>= 5.2)
       railties (>= 5.2)
     rolify (6.0.1)
+    socialization (2.0.1)
+      activerecord
     stringio (3.0.8)
     thor (1.2.2)
     timeout (0.4.0)
@@ -224,6 +226,7 @@ DEPENDENCIES
   rails (~> 7.0.8)
   redis (~> 4.0)
   rolify
+  socialization
   tzinfo-data
 
 RUBY VERSION
