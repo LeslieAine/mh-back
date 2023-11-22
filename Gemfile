@@ -61,3 +61,5 @@ gem 'cancancan'
 gem 'active_model_serializers'
 # gem 'jsonapi-serializer'
 
+#for followings
+gem "socialization"

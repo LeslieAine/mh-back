@@ -14,8 +14,18 @@ Rails.application.routes.draw do
       get "/:user_id/mark-all-as-seen", to: "notifications#mark_all_as_seen"
 
       resources :users, only: [:index, :show] do
-        resources :rooms
-        resources :notifications
+        # resources :rooms
+        # resources :notifications
+        # post 'follow',   to: 'socializations#follow'
+        # post 'unfollow', to: 'socializations#unfollow'
+        # post 'follow', to: 'users#follow', as: 'follow'
+        # delete 'unfollow', to: 'users#unfollow', as: 'unfollow'
+        # member do
+          post 'follow', to: 'users#follow', as: 'follow'
+          delete 'unfollow', to: 'users#unfollow', as: 'unfollow'
+          get 'followers', to: 'users#followers', as: 'followers'
+          get 'followees', to: 'users#followees', as: 'followees'
+        # end
       end
 
       resources :roles
