@@ -30,6 +30,7 @@ class User < ApplicationRecord
   # has_one_attached :avatar
   has_many :posts, foreign_key: 'user_id'
   has_many :contents
+  has_one :about, dependent: :destroy
 
   has_many :likes, foreign_key: :user_id # To track likes on posts
   has_many :bookmarks, foreign_key: :user_id # To track bookmarks on creator's posts
