@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
       resources :notifications
       resources :chats
+      # resource :abouts, only: [:show, :edit, :update]
 
       get "/:user_id/mark-all-as-seen", to: "notifications#mark_all_as_seen"
 
@@ -20,6 +21,8 @@ Rails.application.routes.draw do
         # post 'unfollow', to: 'socializations#unfollow'
         # post 'follow', to: 'users#follow', as: 'follow'
         # delete 'unfollow', to: 'users#unfollow', as: 'unfollow'
+      resource :abouts, only: [:show, :edit, :update]
+
         # member do
           post 'follow', to: 'users#follow', as: 'follow'
           delete 'unfollow', to: 'users#unfollow', as: 'unfollow'
