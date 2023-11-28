@@ -1,21 +1,28 @@
 class Order < ApplicationRecord
-    belongs_to :client, class_name: 'Client'
-    belongs_to :creator, class_name: 'Creator'
-  
-    enum status: { pending: 0, accepted: 1, rejected: 2 }
+  belongs_to :user
+  belongs_to :accepted_by, class_name: 'User', optional: true
+  belongs_to :ordered_by, class_name: 'User', foreign_key: :ordered_by_id
+
+  # before_create :check_balance_and_reduce
+
+  private
+
+  # def check_balance_and_reduce(user)
+  #   # Implement logic to check if the user has enough balance
+  #   # Reduce balance based on the order price
+  #   # Handle errors if balance is insufficient
+  #   # user = current_user
+
+  #   # Check if the user has enough balance
+  #   if user.balance >= price
+  #     user.balance -= price
+  #   else
+  #     raise StandardError, 'Insufficient balance to create the order'
+  #   end
+  # end
   
     validates :title, presence: true
     validates :description, presence: true
     validates :length, presence: true, numericality: { greater_than: 0 }
     validates :price, presence: true, numericality: { greater_than_or_equal_to: 0.01 }
-  
-    # Custom method to set order status to "accepted"
-    def accept!
-      update(status: :accepted)
-    end
-  
-    # Custom method to set order status to "rejected"
-    def reject!
-      update(status: :rejected)
-    end
 end
