@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_22_175855) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_28_130429) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -194,13 +194,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_22_175855) do
     t.text "description"
     t.integer "length"
     t.decimal "price", precision: 10, scale: 2
-    t.integer "status", default: 0
-    t.bigint "client_id"
-    t.bigint "creator_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["client_id"], name: "index_orders_on_client_id"
-    t.index ["creator_id"], name: "index_orders_on_creator_id"
+    t.bigint "ordered_by_id"
+    t.bigint "accepted_by_id"
+    t.index ["accepted_by_id"], name: "index_orders_on_accepted_by_id"
+    t.index ["ordered_by_id"], name: "index_orders_on_ordered_by_id"
+    t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -212,6 +213,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_22_175855) do
     t.integer "likes", default: [], array: true
     t.integer "bookmarks", default: [], array: true
     t.index ["user_id"], name: "index_posts_on_user_id"
+  end
+
+  create_table "purchases", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "purchased_item_type", null: false
+    t.bigint "purchased_item_id", null: false
+    t.decimal "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["purchased_item_type", "purchased_item_id"], name: "index_purchases_on_purchased_item"
+    t.index ["user_id"], name: "index_purchases_on_user_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -255,6 +267,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_22_175855) do
     t.string "username"
     t.string "jti", null: false
     t.string "role"
+    t.decimal "balance", precision: 10, scale: 2, default: "0.0"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -281,7 +294,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_22_175855) do
   add_foreign_key "messages", "users"
   add_foreign_key "notifications", "rooms"
   add_foreign_key "notifications", "users"
-  add_foreign_key "orders", "users", column: "client_id"
-  add_foreign_key "orders", "users", column: "creator_id"
+  add_foreign_key "orders", "users"
+  add_foreign_key "orders", "users", column: "accepted_by_id"
+  add_foreign_key "orders", "users", column: "ordered_by_id"
   add_foreign_key "posts", "users"
+  add_foreign_key "purchases", "users"
 end
