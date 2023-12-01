@@ -15,11 +15,13 @@ Rails.application.routes.draw do
       get "/:user_id/mark-all-as-seen", to: "notifications#mark_all_as_seen"
 
       resources :users, only: [:index, :show] do
-        # member do
+        member do
           get 'made_orders', to: 'orders#made_orders'
           get 'received_orders', to: 'orders#received_orders'
           get 'pending_orders', to: 'orders#pending_orders'
-        # end
+          get 'creator_fulfilled_orders', to: 'orders#creator_fulfilled_orders'
+          get 'client_fulfilled_orders', to: 'orders#client_fulfilled_orders'
+        end
 
       resource :abouts, only: [:show, :edit, :update]
 
@@ -67,6 +69,7 @@ Rails.application.routes.draw do
         member do
           post 'accept'
           post 'reject'
+          patch 'fulfill'
         end
       end
 
