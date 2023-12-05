@@ -2,7 +2,7 @@ class Order < ApplicationRecord
   belongs_to :user
   belongs_to :accepted_by, class_name: 'User', optional: true
   belongs_to :ordered_by, class_name: 'User', foreign_key: :ordered_by_id
-
+  belongs_to :rejected_by, class_name: 'User', optional: true
   # before_create :check_balance_and_reduce
 
   private

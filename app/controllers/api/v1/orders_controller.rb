@@ -13,7 +13,9 @@ class Api::V1::OrdersController < ApplicationController
           if @order.save
             # Deduct the order price from the ordering user's balance
             @user.balance -= @order.price
+            # puts "User balance before save: #{@user.balance}"
             @user.save!
+            # puts "User balance after save: #{@user.balance}"
 
             render json: @order, status: :created
           else
@@ -80,7 +82,7 @@ class Api::V1::OrdersController < ApplicationController
           @order.user.save!
   
           # Update the order to indicate rejection
-          @order.update!(accepted_by: nil)
+          @order.update!(rejected_by: current_user)
   
           render json: @order, status: :ok
         end
