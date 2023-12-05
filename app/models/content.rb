@@ -2,6 +2,7 @@ class Content < ApplicationRecord
   attr_accessor :isPaid
    # Associations
    belongs_to :user, foreign_key: 'user_id'
+   has_many :orders
 
    # Validations
    validates :title, presence: true
