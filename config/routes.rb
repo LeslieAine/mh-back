@@ -21,6 +21,7 @@ Rails.application.routes.draw do
           get 'pending_orders', to: 'orders#pending_orders'
           get 'creator_fulfilled_orders', to: 'orders#creator_fulfilled_orders'
           get 'client_fulfilled_orders', to: 'orders#client_fulfilled_orders'
+          get 'current_balance'
         end
 
       resource :abouts, only: [:show, :edit, :update]

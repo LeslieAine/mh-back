@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_29_124548) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_04_131805) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -200,8 +200,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_29_124548) do
     t.bigint "ordered_by_id"
     t.bigint "accepted_by_id"
     t.text "fulfilled"
+    t.bigint "rejected_by_id"
     t.index ["accepted_by_id"], name: "index_orders_on_accepted_by_id"
     t.index ["ordered_by_id"], name: "index_orders_on_ordered_by_id"
+    t.index ["rejected_by_id"], name: "index_orders_on_rejected_by_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
@@ -298,6 +300,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_29_124548) do
   add_foreign_key "orders", "users"
   add_foreign_key "orders", "users", column: "accepted_by_id"
   add_foreign_key "orders", "users", column: "ordered_by_id"
+  add_foreign_key "orders", "users", column: "rejected_by_id"
   add_foreign_key "posts", "users"
   add_foreign_key "purchases", "users"
 end
