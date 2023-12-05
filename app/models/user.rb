@@ -38,9 +38,29 @@ class User < ApplicationRecord
   has_many :notifications
   has_many :chats
   has_many :rooms, through: :chats
+  # has_many :orders, dependent: :destroy
+  has_many :purchases, dependent: :destroy
 
   acts_as_follower
   acts_as_followable
+
+  has_many :orders, foreign_key: :ordered_by_id, dependent: :destroy
+  has_many :accepted_orders, class_name: 'Order', foreign_key: :accepted_by_id, dependent: :nullify
+  has_many :rejected_orders, class_name: 'Order', foreign_key: :rejected_by_id, dependent: :nullify
+  has_many :made_orders, class_name: 'Order', foreign_key: 'user_id'
+  has_many :received_orders, class_name: 'Order', foreign_key: 'accepted_by_id'
+
+  # other user model code...
+
+  validates :balance, numericality: { greater_than_or_equal_to: 0 }
+
+  def deduct_balance(amount)
+    update!(balance: balance - amount)
+  end
+
+  def add_balance(amount)
+    update!(balance: balance + amount)
+  end
 
    # Define messages association
   #  has_many :messages, foreign_key: :sender_id, class_name: 'Message'

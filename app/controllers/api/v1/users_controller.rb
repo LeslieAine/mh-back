@@ -120,6 +120,10 @@ def create
     @followees = user.followers(User)
     render json: @followees, status: :ok
   end
+
+  def current_balance
+    render json: { balance: current_user.balance }, status: :ok
+  end
   
     private
   
