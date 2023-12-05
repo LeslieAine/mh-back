@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  purchased_item: one
+  purchased_item_type: Purchased item
+  amount: 9.99
+
+two:
+  user: two
+  purchased_item: two
+  purchased_item_type: Purchased item
+  amount: 9.99
