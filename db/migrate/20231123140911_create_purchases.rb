@@ -7,5 +7,7 @@ class CreatePurchases < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
+
+    add_index :purchases, [:purchased_item_id], name: "index_purchases_on_purchased_item"
   end
 end
