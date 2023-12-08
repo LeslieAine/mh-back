@@ -19,22 +19,40 @@ class Api::V1::ContentsController < ApplicationController
           else
             render json: { error: 'Content not found' }, status: :not_found
           end
-        # @client = current_client
-        # @can_purchase = @client && @client.balance >= @content.price
-    
-        # You can add additional logic here, such as checking if the client has already purchased this content.
-    
-    #     if @content.present?
-    #       render json: {
-    #         content: @content,
-    #         client: @client,
-    #         can_purchase: @can_purchase
-    #       }
-    #     else
-    #       render json: { error: 'Content not found' }, status: :not_found
-    #     end
-    #   end
     end
+
+    def user_content
+      user_id = params[:user_id] || params[:id]
+      user = User.find_by(id: user_id)
+    
+      if user
+        @contents = user.contents.includes(:user, purchases: :user).order(created_at: :desc)
+        render json: @contents.to_json(
+          include: {
+            # user: { only: [:id, :username, :avatar] },
+            purchases: { only: [:id, :amount, :created_at] }
+          }
+        )
+      else
+        render json: { error: 'User not found' }, status: :not_found
+      end
+    end
+    
+
+    # def user_content
+    #   user_id = params[:user_id] || params[:id]
+    #   user = User.find_by(id: user_id)
+
+    #   if user
+    #     @contents = user.contents.includes(:user).order(created_at: :desc)
+    #     render json: @contents.to_json(include: { user: { only: [:id, :username, :avatar] } })
+    #   else
+    #     render json: { error: 'User not found' }, status: :not_found
+    #   end
+    #   # @contents = user.contents.includes(:user).order(created_at: :desc)
+    #   # render json: @contents.to_json(include: { user: { only: [:id, :username, :avatar] } })
+    # end
+
   
     # user's action: Create new content
     def create
@@ -65,13 +83,5 @@ class Api::V1::ContentsController < ApplicationController
     def find_content
       @content = Content.find(params[:id])
     end
-  
-    # Authentication logic (you can use a gem like Devise)
-    # def authenticate_user
-    #   unless current_user
-    #     flash[:alert] = 'Please log in to access this page'
-    #     redirect_to login_path
-    #   end
-    # end
   end
   
