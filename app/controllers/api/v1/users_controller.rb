@@ -124,6 +124,12 @@ def create
   def current_balance
     render json: { balance: current_user.balance }, status: :ok
   end
+
+  def purchased_contents
+    purchases = current_user.purchases.includes(:purchased_item)
+    contents = purchases.map(&:purchased_item)
+    render json: contents, status: :ok
+  end
   
     private
   

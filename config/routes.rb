@@ -22,6 +22,9 @@ Rails.application.routes.draw do
           get 'creator_fulfilled_orders', to: 'orders#creator_fulfilled_orders'
           get 'client_fulfilled_orders', to: 'orders#client_fulfilled_orders'
           get 'current_balance'
+          get 'purchases_by_user', to: 'purchases#purchases_by_user'
+          get 'purchased_contents'  # for content a user purchased
+          get 'user_content',  to: 'contents#user_content'  # for content a specific user created
         end
 
       resource :abouts, only: [:show, :edit, :update]
@@ -48,7 +51,15 @@ Rails.application.routes.draw do
       # resources :transactions, only: [:create]
 
       # Contents controller routes
-      resources :contents, only: [:create, :index, :show, :destroy]
+      resources :contents, only: [:create, :index, :show, :destroy] do
+        member do
+          post 'create', to: 'purchases#create'
+          get 'purchases_on_content', to: 'purchases#purchases_on_content'
+        end
+
+        # resources :purchases, only: [:create], on: :member
+        # resources :purchases, only: [:index_on_content], on: :member
+      end
 
       # Posts controller routes
       resources :posts, only: [:create, :index, :show, :destroy] do

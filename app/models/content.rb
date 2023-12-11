@@ -3,6 +3,9 @@ class Content < ApplicationRecord
    # Associations
    belongs_to :user, foreign_key: 'user_id'
    has_many :orders
+   has_many :purchases, as: :purchased_item
+
+   serialize :purchases, Array
 
    # Validations
    validates :title, presence: true
