@@ -1,47 +1,27 @@
-    # app/controllers/posts_controller.rb
-
-    class Api::V1::PostsController < ApplicationController
+class Api::V1::PostsController < ApplicationController
         # before_action :authenticate_user, only: [:create]
         before_action :find_post, only: [:show, :destroy]
         load_and_authorize_resource
-    
-        # Retrieve a list of all posts
-        # def index
-        #     render json: Post.all.order(created_at: :desc)
-        #     # @posts = Post.all
-        #     # render json: @posts
-        # end
-    
-        # Show details of a specific post
-        # def show
-        # @post = Post.find(params[:id])
-        # render json: @post
-        # end
-
-        # def show
-        #     @post = Post.find_by(id: params[:id])
-        
-        #     if @post
-        #       render json: @post
-        #     else
-        #       render json: { error: 'Post not found' }, status: :not_found
-        #     end
-        #   end
         
         def index
-            @posts = Post.includes(:user).order(created_at: :desc)
-            render json: @posts.to_json(include: { user: { only: [:id, :username, :avatar] } })
-          end
-    
-          def show
-            @post = Post.includes(:user).find_by(id: params[:id])
+            @posts = Post.includes(:user).with_attached_image.order(created_at: :desc)
+            render json: @posts.to_json(
+                include: {
+                     user: { only: [:id, :username, :avatar] },
+                    },
+                    methods: [:image_url]
+                    )
+        end
+
+        def show
+        @post = Post.includes(:user).find_by(id: params[:id])
     
             if @post
               render json: @post.to_json(include: { user: { only: [:id, :username, :avatar] } })
             else
               render json: { error: 'Post not found' }, status: :not_found
             end
-          end
+        end
 
         # Create a new post (for users)
         def create
@@ -55,6 +35,16 @@
 
 
         @post = @user.posts.build(post_params)
+
+         # Attach the image if present in the params
+        # @post.image.attach(params[:image]) if params[:image].present?
+        # post.main_photo.attach(params[:main_photo]) if params[:main_photo]
+        if params[:image] #changed this to image from file.
+            post.image.attach(params[:image]) #changed this to image from file.
+            image_url = url_for(post.image)
+          end
+
+
         if @post.save
             render json: @post, status: :created
         else
@@ -63,49 +53,6 @@
         end
     end
     
-        # Other actions (e.g., liking and bookmarking posts) can be added here
-        # Like a post
-    #   def like
-    #     @post = Post.find(params[:id])
-    #     @client = current_user if current_user.present? && current_user.client?
-
-    #     if @client.present?
-    #       # Check if the client has already liked the post
-    #       if @client.likes.exists?(post_id: @post.id)
-    #         # Client has already liked the post, so we can assume this action unlikes the post
-    #         @client.likes.find_by(post_id: @post.id).destroy
-    #         render json: { message: 'Post unliked' }
-    #       else
-    #         # Client hasn't liked the post, so we create a new like
-    #         @client.likes.create(post_id: @post.id)
-    #         render json: { message: 'Post liked' }
-    #       end
-    #     else
-    #       render json: { error: 'Only clients can like posts' }, status: :forbidden
-    #     end
-    #   end
-
-    #   # Bookmark a post
-    #   def bookmark
-    #     @post = Post.find(params[:id])
-    #     @client = current_user if current_user.present? && current_user.client?
-
-    #     if @client.present?
-    #       # Check if the client has already bookmarked the post
-    #       if @client.bookmarks.exists?(post_id: @post.id)
-    #         # Client has already bookmarked the post, so this action removes the bookmark
-    #         @client.bookmarks.find_by(post_id: @post.id).destroy
-    #         render json: { message: 'Post unbookmarked' }
-    #       else
-    #         # Client hasn't bookmarked the post, so we create a new bookmark
-    #         @client.bookmarks.create(post_id: @post.id)
-    #         render json: { message: 'Post bookmarked' }
-    #       end
-    #     else
-    #       render json: { error: 'Only clients can bookmark posts' }, status: :forbidden
-    #     end
-    #   end
-
         # DELETE /api/v1/posts/:id
     def destroy
         if current_user? && @post.user == current_user
@@ -136,7 +83,7 @@
     end
     
         def post_params
-        params.require(:post).permit(:content, :user_id)
+        params.require(:post).permit(:content, :user_id, :image)
         end
     
         # Authentication logic (you can use a gem like Devise)

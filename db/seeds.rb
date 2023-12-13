@@ -13,3 +13,9 @@ roles = %w(creator client admin)
 roles.each do |role_name|
   Role.find_or_create_by(name: role_name)
 end
+
+
+# File.open(Rails.root.join('db/images/download.jpeg'))
+
+# new_post.images.attach( io: File.open(Rails.root.join('db/images/NAME_OF_YOUR_FILE.jpeg')),
+# filename: 'NAME_OF_YOUR_FILE.jpeg')
