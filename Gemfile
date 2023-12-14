@@ -63,3 +63,5 @@ gem 'active_model_serializers'
 
 #for followings
 gem "socialization"
+
+gem 'carrierwave'
