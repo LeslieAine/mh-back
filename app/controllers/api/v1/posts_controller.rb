@@ -1,5 +1,3 @@
-    # app/controllers/posts_controller.rb
-
     class Api::V1::PostsController < ApplicationController
         # before_action :authenticate_user, only: [:create]
         before_action :find_post, only: [:show, :destroy]
@@ -55,6 +53,22 @@
 
 
         @post = @user.posts.build(post_params)
+
+        # if params[:post][:image].present?
+        #     image_data = params[:post][:image]
+        #     image_io = StringIO.new(Base64.decode64(image_data["data"]))
+        #     image_io.class.class_eval { attr_accessor :original_filename, :content_type }
+        #     image_io.original_filename = image_data["filename"]
+        #     image_io.content_type = image_data["content_type"]
+
+        #     @post.image.attach(io: image_io, filename: image_io.original_filename)
+        # end
+        # @post.image.attach(params[:image]) if params[:image].present?
+        # Attach the image if present in the nested structure
+        # if params.dig(:post, :image).present?
+        #     @post.image.attach(params[:post][:image])
+        # end
+
         if @post.save
             render json: @post, status: :created
         else
@@ -136,7 +150,7 @@
     end
     
         def post_params
-        params.require(:post).permit(:content, :user_id)
+        params.require(:post).permit(:content, :user_id, image: {})
         end
     
         # Authentication logic (you can use a gem like Devise)

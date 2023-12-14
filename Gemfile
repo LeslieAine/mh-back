@@ -58,8 +58,17 @@ gem 'rolify'
 gem 'cancancan'
 
 #for ActiveRecord
-gem 'active_model_serializers'
+gem 'active_model_serializers', '~> 0.10.13'
 # gem 'jsonapi-serializer'
 
 #for followings
 gem "socialization"
+
+# Use active storage
+gem 'activestorage'
+
+# Use Active Storage variants
+gem "image_processing", "~> 1.2"
+
+
+gem "shrine"
