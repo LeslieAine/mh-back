@@ -4,12 +4,12 @@ class Api::V1::PostsController < ApplicationController
         load_and_authorize_resource
         
         def index
-            @posts = Post.includes(:user).with_attached_image.order(created_at: :desc)
+            @posts = Post.includes(:user).order(created_at: :desc)
             render json: @posts.to_json(
                 include: {
                      user: { only: [:id, :username, :avatar] },
-                    },
-                    methods: [:image_url]
+                    }
+                    # methods: [:image_url]
                     )
         end
 
@@ -39,10 +39,10 @@ class Api::V1::PostsController < ApplicationController
          # Attach the image if present in the params
         # @post.image.attach(params[:image]) if params[:image].present?
         # post.main_photo.attach(params[:main_photo]) if params[:main_photo]
-        if params[:image] #changed this to image from file.
-            post.image.attach(params[:image]) #changed this to image from file.
-            image_url = url_for(post.image)
-          end
+        # if params[:image] #changed this to image from file.
+        #     post.image.attach(params[:image]) #changed this to image from file.
+        #     image_url = url_for(post.image)
+        #   end
 
 
         if @post.save
