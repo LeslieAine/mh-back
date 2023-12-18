@@ -30,6 +30,15 @@
         
         def index
             @posts = Post.includes(:user).order(created_at: :desc)
+
+            # @posts_with_images = @posts.map do |post|
+            #     if post.image.attached?
+            #         post.as_json.merge(image_url: url_for(post.image))
+            #     else
+            #         post.as_json.merge(image_url: nil)
+            #     end
+            # end
+
             render json: @posts.to_json(include: { user: { only: [:id, :username, :avatar] } })
           end
     
@@ -136,7 +145,7 @@
     end
     
         def post_params
-        params.require(:post).permit(:content, :user_id)
+        params.require(:post).permit(:content, :user_id, :image)
         end
     
         # Authentication logic (you can use a gem like Devise)
